@@ -396,14 +396,20 @@ export default function GameShell() {
                         <div className="mb-1 flex items-center gap-2">
                           <Avatar npc={n} size={26} />
                           <span className="text-sm font-extrabold">{n.name}</span>
-                          {a && !a.loading && a.sources.length > 0 && (
-                            <button
-                              onClick={() => openDrawer(n.name, a.sources)}
-                              className="ml-auto rounded-full border border-emerald-600/40 bg-emerald-200 px-2 py-0.5 text-[11px] font-bold text-emerald-900"
-                            >
-                              📖 {a.sources.length}
-                            </button>
-                          )}
+                          {a &&
+                            !a.loading &&
+                            (a.sources.length > 0 ? (
+                              <button
+                                onClick={() => openDrawer(n.name, a.sources)}
+                                className="ml-auto rounded-full border border-emerald-600/40 bg-emerald-200 px-2 py-0.5 text-[11px] font-bold text-emerald-900"
+                              >
+                                📖 {a.sources.length}
+                              </button>
+                            ) : (
+                              <span className="ml-auto text-[11px] text-black/35">
+                                📖 근거 없음
+                              </span>
+                            ))}
                         </div>
                         <div className="whitespace-pre-wrap text-[13.5px] leading-relaxed">
                           {!a ? (
@@ -611,14 +617,19 @@ export default function GameShell() {
                       <div className="whitespace-pre-wrap rounded-2xl rounded-tl-sm bg-white/10 px-3 py-1.5 text-[13.5px] leading-relaxed text-white">
                         {e.content}
                       </div>
-                      {e.sources && e.sources.length > 0 && (
-                        <button
-                          onClick={() => openDrawer(e.name, e.sources!)}
-                          className="mt-1 rounded-full border border-emerald-400/50 bg-emerald-400/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-200 hover:bg-emerald-400/25"
-                        >
-                          📖 관련 근거 {e.sources.length}건
-                        </button>
-                      )}
+                      {e.sources &&
+                        (e.sources.length > 0 ? (
+                          <button
+                            onClick={() => openDrawer(e.name, e.sources!)}
+                            className="mt-1 rounded-full border border-emerald-400/50 bg-emerald-400/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-200 hover:bg-emerald-400/25"
+                          >
+                            📖 관련 근거 {e.sources.length}건
+                          </button>
+                        ) : (
+                          <span className="mt-1 inline-block text-[11px] text-white/35">
+                            📖 관련 근거 없음
+                          </span>
+                        ))}
                     </div>
                   </div>
                 ),
