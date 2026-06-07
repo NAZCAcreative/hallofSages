@@ -10,13 +10,13 @@ const PLAYLIST: Track[] = [
   { title: "Lantern Hall", src: "/sound/lantern-hall.mp3" },
   { title: "Lantern Sanctum", src: "/sound/lantern-sanctum.mp3" },
   { title: "Temple of Echoes", src: "/sound/temple-of-echoes.mp3" },
-  { title: "Fantasy Sanctuary", src: "/sound/fantasy-sanctuary.mp3" },
   { title: "Hall of Sages (Reborn)", src: "/sound/reborn-hall-of-sages.mp3" },
   { title: "Lantern Hall (Reborn)", src: "/sound/reborn-lantern-hall.mp3" },
   { title: "Lantern Sanctum (Reborn)", src: "/sound/reborn-lantern-sanctum.mp3" },
   { title: "Temple of Echoes (Reborn)", src: "/sound/reborn-temple-of-echoes.mp3" },
-  { title: "Fantasy Sanctuary (Reborn)", src: "/sound/reborn-fantasy-sanctuary.mp3" },
 ];
+// Dropped the two ~0.46MB "Fantasy Sanctuary" tracks — far shorter than the
+// 3.4–5MB ambient pieces, so they broke the seamless background-music loop.
 
 const wrap = (i: number) => (i + PLAYLIST.length) % PLAYLIST.length;
 const randIdx = (exclude = -1) => {
