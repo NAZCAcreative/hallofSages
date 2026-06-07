@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "15.1.6",
+    "next": "15.5.19",
     "openai": "^4.77.0",
     "phaser": "^3.87.0",
     "react": "19.0.0",
