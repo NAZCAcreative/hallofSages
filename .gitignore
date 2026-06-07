@@ -15,3 +15,6 @@ next-env.d.ts
 /sound
 /data/rag/wisdom_rag_index/
 /data/rag/three_saints_index.pkl
+
+# bkit local tooling state (may contain session secrets)
+.bkit/
