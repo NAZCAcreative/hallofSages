@@ -787,6 +787,50 @@ function SourceBar({ count, onClick }: { count: number; onClick: () => void }) {
   );
 }
 
+type Dir4 = "up" | "down" | "left" | "right";
+
+/**
+ * Single D-pad button. Defined at module scope (NOT inside TouchControls) so its
+ * component identity is stable: re-rendering the parent must never UNMOUNT this
+ * button. A remount while the finger is held swallows the pointer-up, leaving the
+ * direction stuck "on" — which made the player keep walking after touching a sage
+ * (proximity → setHint → parent re-render → remount).
+ */
+function DPadButton({
+  dir,
+  label,
+  col,
+  row,
+  onPress,
+  onRelease,
+}: {
+  dir: Dir4;
+  label: string;
+  col: number;
+  row: number;
+  onPress: (d: Dir4) => void;
+  onRelease: (d: Dir4) => void;
+}) {
+  return (
+    <button
+      onPointerDown={(e) => {
+        e.preventDefault();
+        e.currentTarget.setPointerCapture?.(e.pointerId);
+        onPress(dir);
+      }}
+      onPointerUp={() => onRelease(dir)}
+      onPointerCancel={() => onRelease(dir)}
+      onPointerLeave={() => onRelease(dir)}
+      onLostPointerCapture={() => onRelease(dir)}
+      onContextMenu={(e) => e.preventDefault()}
+      style={{ gridColumn: col, gridRow: row }}
+      className="flex h-12 w-12 select-none items-center justify-center rounded-xl border-2 border-white/30 bg-black/45 text-lg text-white active:bg-amber-500/70"
+    >
+      {label}
+    </button>
+  );
+}
+
 /** On-screen D-pad + action buttons for touch devices. */
 function TouchControls() {
   const dirs = useRef({ up: false, down: false, left: false, right: false });
@@ -798,37 +842,18 @@ function TouchControls() {
       y: (d.down ? 1 : 0) - (d.up ? 1 : 0),
     });
   };
-  const set = (k: keyof typeof dirs.current, v: boolean) => {
+  const set = (k: Dir4, v: boolean) => {
     dirs.current[k] = v;
     emit();
   };
+  const onPress = (k: Dir4) => set(k, true);
+  const onRelease = (k: Dir4) => set(k, false);
 
-  const Pad = ({
-    k,
-    label,
-    col,
-    row,
-  }: {
-    k: keyof typeof dirs.current;
-    label: string;
-    col: number;
-    row: number;
-  }) => (
-    <button
-      onPointerDown={(e) => {
-        e.preventDefault();
-        e.currentTarget.setPointerCapture?.(e.pointerId);
-        set(k, true);
-      }}
-      onPointerUp={() => set(k, false)}
-      onPointerCancel={() => set(k, false)}
-      onContextMenu={(e) => e.preventDefault()}
-      style={{ gridColumn: col, gridRow: row }}
-      className="flex h-12 w-12 select-none items-center justify-center rounded-xl border-2 border-white/30 bg-black/45 text-lg text-white active:bg-amber-500/70"
-    >
-      {label}
-    </button>
-  );
+  // Safety net: if the controls unmount (e.g. a modal opens) while a direction is
+  // held, make sure the game stops moving instead of drifting indefinitely.
+  useEffect(() => {
+    return () => bus.emit("touchMove", { x: 0, y: 0 });
+  }, []);
 
   return (
     <div className="pointer-events-none absolute inset-0 z-30 lg:hidden">
@@ -837,10 +862,10 @@ function TouchControls() {
         className="pointer-events-auto absolute bottom-4 left-4 grid touch-none gap-1"
         style={{ gridTemplateColumns: "repeat(3,1fr)", gridTemplateRows: "repeat(3,1fr)" }}
       >
-        <Pad k="up" label="▲" col={2} row={1} />
-        <Pad k="left" label="◀" col={1} row={2} />
-        <Pad k="right" label="▶" col={3} row={2} />
-        <Pad k="down" label="▼" col={2} row={3} />
+        <DPadButton dir="up" label="▲" col={2} row={1} onPress={onPress} onRelease={onRelease} />
+        <DPadButton dir="left" label="◀" col={1} row={2} onPress={onPress} onRelease={onRelease} />
+        <DPadButton dir="right" label="▶" col={3} row={2} onPress={onPress} onRelease={onRelease} />
+        <DPadButton dir="down" label="▼" col={2} row={3} onPress={onPress} onRelease={onRelease} />
       </div>
 
       {/* Actions bottom-right */}

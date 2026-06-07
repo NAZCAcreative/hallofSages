@@ -55,14 +55,20 @@ function loadUnits(): Unit[] {
   return allUnits;
 }
 
-// Tokenize: Hangul → 2-grams (robust to josa/OCR noise), latin/number words as-is.
+// Tokenize: Hangul → whole word + 2-grams (robust to josa/OCR noise),
+// latin/number words as-is. The whole-word token is rare → high IDF, so an exact
+// concept match (e.g. "무기력") outranks spurious 2-gram overlaps ("무기"=weapon).
 function tokenize(s: string): string[] {
   const out: string[] = [];
   const words = s.toLowerCase().match(/[가-힣]+|[a-z0-9]{2,}/g) || [];
   for (const w of words) {
     if (/[가-힣]/.test(w)) {
-      if (w.length <= 2) out.push(w);
-      else for (let i = 0; i < w.length - 1; i++) out.push(w.slice(i, i + 2));
+      if (w.length <= 2) {
+        out.push(w);
+      } else {
+        out.push(w); // whole word — exact, high-signal match
+        for (let i = 0; i < w.length - 1; i++) out.push(w.slice(i, i + 2));
+      }
     } else {
       out.push(w);
     }

@@ -37,6 +37,10 @@ type NpcSprite = {
   baseY: number;
   bob?: Phaser.Tweens.Tween;
   emote?: Phaser.GameObjects.Text;
+  /** Heavenly light shaft descending onto the sage (God rays). */
+  ray?: Phaser.GameObjects.Image;
+  /** Falling sacred motes (feather / lotus petal / leaf) near the sage. */
+  petals?: Phaser.GameObjects.Particles.ParticleEmitter;
 };
 
 export class MainScene extends Phaser.Scene {
@@ -58,6 +62,10 @@ export class MainScene extends Phaser.Scene {
   private motes: { s: Phaser.GameObjects.Image; vx: number; vy: number }[] = [];
   /** Footstep dust emitter (follows the player). */
   private dust?: Phaser.GameObjects.Particles.ParticleEmitter;
+  /** Focus spotlight: dims the hall except around the nearby sage. */
+  private spotlight?: Phaser.GameObjects.Image;
+  /** Respect the user's reduced-motion preference. */
+  private reduce = false;
 
   // Responsive world + derived sizes (set in create()).
   private W = 960;
@@ -91,6 +99,9 @@ export class MainScene extends Phaser.Scene {
 
   create() {
     this.cameras.main.setBackgroundColor("#1a2e1f");
+    this.reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
     // Derive world + sizes from the actual canvas size (responsive).
     this.W = this.scale.width;
@@ -122,15 +133,50 @@ export class MainScene extends Phaser.Scene {
       }
     }
 
-    // Soft radial glow texture (shared) for each sage's light source.
+    // Shared procedural textures for the sacred effects.
     this.makeGlowTexture();
+    this.makeBeamTexture();
+    this.makePetalTexture();
+    this.makeSpotlightTexture();
     this.makeAmbient();
+
+    // Flickering lanterns dotted around the hall edges (warm point lights).
+    this.makeLanterns();
+
+    // Per-sage falling-mote tint (feather / lotus petal / leaf).
+    const PETAL_TINT: Record<string, number> = {
+      jesus: 0xfff3c8,
+      buddha: 0xf9a8d4,
+      confucius: 0x9ae6b4,
+    };
 
     // NPCs
     for (const n of NPCS) {
       const frac = npcFrac(n, portrait);
       const nx = frac.fx * this.W;
       const ny = frac.fy * this.H;
+
+      // Heavenly light shaft (God rays) descending from above onto the sage.
+      const ray = this.add.image(nx, -this.spriteSize * 0.2, "beam");
+      ray.setOrigin(0.5, 0);
+      ray.setBlendMode(Phaser.BlendModes.ADD);
+      ray.setTint(0xfff2cf);
+      ray.setDisplaySize(this.spriteSize * 1.25, ny + this.spriteSize * 0.35);
+      ray.setDepth(-2);
+      ray.setAlpha(0.12);
+      ray.setData("base", 0.12);
+      // Only sway the shaft; alpha stays free for the proximity brighten.
+      if (!this.reduce) {
+        this.tweens.add({
+          targets: ray,
+          angle: { from: -1.6, to: 1.6 },
+          duration: 5200 + Math.random() * 1600,
+          yoyo: true,
+          repeat: -1,
+          ease: "Sine.InOut",
+        });
+      }
+
       // Per-sage light source (colored aura) behind the sprite, gently pulsing.
       const glow = this.add.image(nx, ny, "glow");
       glow.setTint(n.color);
@@ -139,18 +185,45 @@ export class MainScene extends Phaser.Scene {
       glow.setDepth(0);
       glow.setAlpha(0.45);
       const base = glow.scaleX;
-      this.tweens.add({
-        targets: glow,
-        alpha: { from: 0.35, to: 0.7 },
-        scaleX: { from: base * 0.9, to: base * 1.12 },
-        scaleY: { from: base * 0.9, to: base * 1.12 },
-        duration: 1600 + Math.random() * 800,
-        yoyo: true,
-        repeat: -1,
-        ease: "Sine.InOut",
-      });
+      if (!this.reduce) {
+        this.tweens.add({
+          targets: glow,
+          alpha: { from: 0.35, to: 0.7 },
+          scaleX: { from: base * 0.9, to: base * 1.12 },
+          scaleY: { from: base * 0.9, to: base * 1.12 },
+          duration: 1600 + Math.random() * 800,
+          yoyo: true,
+          repeat: -1,
+          ease: "Sine.InOut",
+        });
+      }
 
       const obj = this.makeActor(nx, ny, n.asset, n.color);
+
+      // Falling sacred motes near the sage (feather / lotus petal / leaf).
+      const petals = this.add.particles(
+        nx,
+        ny - this.spriteSize * 0.55,
+        "petal",
+        {
+          x: { min: -this.spriteSize * 0.42, max: this.spriteSize * 0.42 },
+          speedY: { min: 8, max: 26 },
+          speedX: { min: -12, max: 12 },
+          gravityY: 6,
+          rotate: { min: 0, max: 360 },
+          scale: {
+            start: this.spriteSize / 760,
+            end: this.spriteSize / 1000,
+          },
+          alpha: { start: 0.85, end: 0 },
+          lifespan: 5200,
+          frequency: this.reduce ? 2400 : 620,
+          quantity: 1,
+          tint: PETAL_TINT[n.id] ?? 0xffffff,
+        },
+      );
+      petals.setDepth(1.5);
+
       const label = this.add
         .text(nx, ny - this.spriteSize * 0.42, n.name, {
           fontFamily: '"Gowun Batang", sans-serif',
@@ -161,10 +234,17 @@ export class MainScene extends Phaser.Scene {
           strokeThickness: 4,
         })
         .setOrigin(0.5, 1)
-        .setDepth(2);
+        .setDepth(3);
       label.setShadow(0, 2, "#000000", 4);
-      this.npcs.push({ npc: n, obj, glow, label, baseY: ny });
+      this.npcs.push({ npc: n, obj, glow, label, baseY: ny, ray, petals });
     }
+
+    // Focus spotlight: a dark vignette that fades in around the nearby sage.
+    const spotSize = Math.max(this.W, this.H) * 1.8;
+    this.spotlight = this.add.image(this.W / 2, this.H / 2, "spotlight");
+    this.spotlight.setDisplaySize(spotSize, spotSize);
+    this.spotlight.setDepth(1.2);
+    this.spotlight.setAlpha(0);
 
     // Player (visitor) starts near the bottom — animated sprite if frames loaded.
     const px = this.W / 2;
@@ -304,6 +384,107 @@ export class MainScene extends Phaser.Scene {
     this.textures.addCanvas("glow", canvas);
   }
 
+  /** Vertical light shaft: bright at top, fading down + softening at the edges. */
+  private makeBeamTexture() {
+    if (this.textures.exists("beam")) return;
+    const w = 64;
+    const h = 256;
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const c = canvas.getContext("2d")!;
+    const vg = c.createLinearGradient(0, 0, 0, h);
+    vg.addColorStop(0, "rgba(255,255,255,0.95)");
+    vg.addColorStop(1, "rgba(255,255,255,0)");
+    c.fillStyle = vg;
+    c.fillRect(0, 0, w, h);
+    // Soften the left/right edges so it reads as a beam, not a rectangle.
+    c.globalCompositeOperation = "destination-in";
+    const hg = c.createLinearGradient(0, 0, w, 0);
+    hg.addColorStop(0, "rgba(0,0,0,0)");
+    hg.addColorStop(0.5, "rgba(0,0,0,1)");
+    hg.addColorStop(1, "rgba(0,0,0,0)");
+    c.fillStyle = hg;
+    c.fillRect(0, 0, w, h);
+    this.textures.addCanvas("beam", canvas);
+  }
+
+  /** Small petal / leaf / feather teardrop (tinted per sage at use). */
+  private makePetalTexture() {
+    if (this.textures.exists("petal")) return;
+    const size = 32;
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    const c = canvas.getContext("2d")!;
+    const cx = size / 2;
+    c.fillStyle = "rgba(255,255,255,1)";
+    c.beginPath();
+    c.moveTo(cx, 2);
+    c.quadraticCurveTo(size - 3, size / 2, cx, size - 2);
+    c.quadraticCurveTo(3, size / 2, cx, 2);
+    c.fill();
+    this.textures.addCanvas("petal", canvas);
+  }
+
+  /** Radial vignette: transparent center → dark edges (focus spotlight). */
+  private makeSpotlightTexture() {
+    if (this.textures.exists("spotlight")) return;
+    const size = 512;
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    const c = canvas.getContext("2d")!;
+    const grd = c.createRadialGradient(
+      size / 2,
+      size / 2,
+      0,
+      size / 2,
+      size / 2,
+      size / 2,
+    );
+    grd.addColorStop(0, "rgba(0,0,0,0)");
+    grd.addColorStop(0.14, "rgba(0,0,0,0)");
+    grd.addColorStop(0.5, "rgba(0,0,0,1)");
+    grd.addColorStop(1, "rgba(0,0,0,1)");
+    c.fillStyle = grd;
+    c.fillRect(0, 0, size, size);
+    this.textures.addCanvas("spotlight", canvas);
+  }
+
+  /** Warm flickering lanterns dotted around the hall edges. */
+  private makeLanterns() {
+    const spots: [number, number][] = [
+      [0.1, 0.18],
+      [0.9, 0.2],
+      [0.06, 0.6],
+      [0.94, 0.58],
+      [0.5, 0.1],
+      [0.32, 0.72],
+      [0.68, 0.72],
+    ];
+    for (const [fx, fy] of spots) {
+      const l = this.add.image(fx * this.W, fy * this.H, "glow");
+      l.setBlendMode(Phaser.BlendModes.ADD);
+      l.setTint(0xffcf8f);
+      const s = this.spriteSize * 0.5 * (0.7 + Math.random() * 0.5);
+      l.setDisplaySize(s, s);
+      l.setDepth(0);
+      const a = 0.16 + Math.random() * 0.12;
+      l.setAlpha(a);
+      if (!this.reduce) {
+        this.tweens.add({
+          targets: l,
+          alpha: { from: a * 0.5, to: a * 1.3 },
+          duration: 220 + Math.random() * 460,
+          yoyo: true,
+          repeat: -1,
+          ease: "Sine.InOut",
+        });
+      }
+    }
+  }
+
   /** Soft ambient mood: floating golden light motes. */
   private makeAmbient() {
     // Floating golden light motes drifting gently upward.
@@ -348,11 +529,23 @@ export class MainScene extends Phaser.Scene {
         s.emote?.destroy();
         s.emote = undefined;
         this.tweens.add({ targets: s.label, scale: 1, duration: 160 });
+        // Dim the sage's light shaft back to its resting glow.
+        if (s.ray) {
+          this.tweens.add({
+            targets: s.ray,
+            alpha: (s.ray.getData("base") as number) ?? 0.12,
+            duration: 300,
+          });
+        }
       }
     }
     if (next) {
       const s = this.npcs.find((x) => x.npc.id === next.id);
       if (s) {
+        // Brighten the sage's heavenly light as you draw near.
+        if (s.ray) {
+          this.tweens.add({ targets: s.ray, alpha: 0.34, duration: 280 });
+        }
         s.bob = this.tweens.add({
           targets: s.obj,
           y: { from: s.baseY, to: s.baseY - 12 },
@@ -376,6 +569,22 @@ export class MainScene extends Phaser.Scene {
           ease: "Back.Out",
         });
         s.emote = this.makeEmote(s, "?", "#fde68a");
+      }
+    }
+
+    // Focus spotlight follows the nearby sage; fades out when none is near.
+    if (this.spotlight) {
+      this.tweens.killTweensOf(this.spotlight);
+      if (next) {
+        const s = this.npcs.find((x) => x.npc.id === next.id);
+        if (s) this.spotlight.setPosition(s.obj.x, s.baseY);
+        this.tweens.add({
+          targets: this.spotlight,
+          alpha: this.reduce ? 0.3 : 0.45,
+          duration: 320,
+        });
+      } else {
+        this.tweens.add({ targets: this.spotlight, alpha: 0, duration: 320 });
       }
     }
   }
