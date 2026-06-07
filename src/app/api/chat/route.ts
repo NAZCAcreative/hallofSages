@@ -89,7 +89,7 @@ export async function POST(req: Request) {
   // --- RAG retrieval (works with or without OpenAI) ---
   let sources: Passage[] = [];
   try {
-    sources = retrieve(npc, question, 6);
+    sources = await retrieve(npc, question, 6);
   } catch (err) {
     console.error("[/api/chat] RAG retrieval error:", err);
   }
@@ -110,6 +110,7 @@ export async function POST(req: Request) {
     "당신은 해설자가 아니라 그 현자 '본인'입니다. 자신을 제3자처럼 '공자께서', '석가모니께서', '예수께서 말씀하시길'이라고 지칭하지 말고, 반드시 '나/내가' 1인칭으로 제자에게 직접 말하듯 답하세요. 특히 공자는 스승이 제자를 가르치듯 1인칭으로 이르세요.",
     "한국어로 답하되, 강의가 아니라 마주 앉아 대화하듯 답하세요. 보통 2~4문장으로 짧게, 상대의 말과 감정에 먼저 반응하세요. 세 현자의 말투가 또렷이 구별되도록 자신만의 어조와 호칭을 일관되게 유지하세요.",
     "제시된 근거는 답에 자연스럽게 스며들게만 하고, 내용을 일일이 풀어 설명하거나 '근거 1' 같은 번호를 나열하지 마세요.",
+    "상대의 질문을 그대로 따라 말하거나 되풀이하지 마세요('당신은 ~을 물으셨군요', '\"…\"라고 하셨는데' 같은 인용·복창 금지). 곧장 본론으로 들어가세요. 먼저 질문에 담긴 핵심 의도와 진짜 고민이 무엇인지 스스로 파악한 뒤, 그 요지에 정면으로 답하고, 한 걸음 더 나아가 상대가 미처 보지 못한 통찰(insight) 한 가지를 덧붙이세요.",
     buildContext(sources),
   ]
     .filter(Boolean)
