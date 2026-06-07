@@ -34,6 +34,8 @@ export default function MusicPlayer() {
   const [playing, setPlaying] = useState(false);
   const [listOpen, setListOpen] = useState(false);
   const [volume, setVolume] = useState(0.5);
+  // Start muted so autoplay is allowed even on mobile; unmute on first gesture.
+  const [muted, setMuted] = useState(true);
 
   // Client mount: pick a random starting track (avoids SSR hydration mismatch).
   useEffect(() => {
@@ -62,10 +64,13 @@ export default function MusicPlayer() {
     if (!audio) return;
     audio.volume = volume;
     const tryPlay = () => audio.play().then(() => setPlaying(true)).catch(() => {});
+    // Muted autoplay is allowed even on mobile — start it now (silently).
     tryPlay();
-    // Browsers block audio autoplay until the first user gesture — retry on any.
+    // On the first user gesture, unmute (reliable on mobile) + ensure playing.
     const events = ["pointerdown", "keydown", "touchstart", "click"] as const;
     const onFirst = () => {
+      if (audioRef.current) audioRef.current.muted = false;
+      setMuted(false);
       tryPlay();
       events.forEach((e) => window.removeEventListener(e, onFirst));
     };
@@ -129,6 +134,7 @@ export default function MusicPlayer() {
           ref={audioRef}
           src={track.src}
           autoPlay
+          muted={muted}
           onEnded={next}
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
