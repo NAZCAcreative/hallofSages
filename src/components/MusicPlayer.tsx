@@ -63,17 +63,14 @@ export default function MusicPlayer() {
     audio.volume = volume;
     const tryPlay = () => audio.play().then(() => setPlaying(true)).catch(() => {});
     tryPlay();
+    // Browsers block audio autoplay until the first user gesture — retry on any.
+    const events = ["pointerdown", "keydown", "touchstart", "click"] as const;
     const onFirst = () => {
       tryPlay();
-      window.removeEventListener("pointerdown", onFirst);
-      window.removeEventListener("keydown", onFirst);
+      events.forEach((e) => window.removeEventListener(e, onFirst));
     };
-    window.addEventListener("pointerdown", onFirst);
-    window.addEventListener("keydown", onFirst);
-    return () => {
-      window.removeEventListener("pointerdown", onFirst);
-      window.removeEventListener("keydown", onFirst);
-    };
+    events.forEach((e) => window.addEventListener(e, onFirst));
+    return () => events.forEach((e) => window.removeEventListener(e, onFirst));
   }, [mounted]);
 
   // Play the new track when it changes (if we were playing).
@@ -131,6 +128,7 @@ export default function MusicPlayer() {
         <audio
           ref={audioRef}
           src={track.src}
+          autoPlay
           onEnded={next}
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
