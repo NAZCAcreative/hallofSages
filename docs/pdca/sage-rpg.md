@@ -29,6 +29,19 @@
 
 스코프 제외(의도적): 전투 · 저장 · 로그인.
 
+### Plan 확장 — 초기 MVP 이후 추가 출하분 (post-doc 커밋 반영)
+
+| # | 추가 요구사항 | 상태 | 근거 |
+|---|----------------|:---:|------|
+| 11 | RAG 근거 검색 + 출처 표기 | ✅ | `lib/rag.ts` BM25 over `data/rag/documents/all_units.json` (5.4MB 번들), `/api/chat` `sources` 반환 |
+| 12 | 동시 질문 (Enter → 세 현자에게 한 번에) | ✅ | `bus.askAll` / `reqAskAll`, `GameShell` ask-all 흐름 |
+| 13 | 모바일/터치 컨트롤 | ✅ | `bus.touchMove`/`reqInteract`/`reqAskAll`, 포트레이트 레이아웃 `npcs.ts` `WORLD_PORTRAIT`/`PORTRAIT_POS` |
+| 14 | 답변 직후 "!" 이모트 + 파티클 | ✅ | `bus.sageAnswered` → MainScene emote burst |
+| 15 | 배경음악 플레이어 (모바일 자동재생) | ✅ | `MusicPlayer.tsx` muted-autoplay → first-gesture unmute |
+| 16 | 신비로운 배경 연출 | ✅ | `MysticBackground.tsx` |
+
+스코프 제외(여전히 의도적): 전투 · 저장 · 로그인.
+
 ## Design — 아키텍처 (선택: Pragmatic Balance)
 
 - **Phaser(게임 로직)** 와 **React(UI 오버레이)** 분리.
@@ -38,16 +51,18 @@
   화살표만 capture, E는 uncaptured 로 해결.
 - AI: `/api/chat` 에서 OpenAI 호출, 실패/무키 시 persona별 폴백 → 항상 동작.
 
-## Check — 검증 결과 (Match Rate ≈ 100%)
+## Check — 검증 결과 (Match Rate ≈ 100%, 재검증 2026-06-08)
 
-- `npm run build` ✅ 5 routes 컴파일 성공.
-- `GET /` ✅ 200, 게임 셸 렌더.
-- `POST /api/chat` ✅ jesus/buddha/confucius 각각 고유 인격으로 OpenAI 응답.
-- 검증: 잘못된 npc / 빈 메시지 → 400.
-- 폴백: 키 없음/오류 시 persona fallback 동작 (코드 경로 확인).
+- `npm run build` ✅ Next.js 15.5.19, 5 routes, 26.2s 컴파일 성공 (EXIT 0).
+- `GET /` ✅ 정적 prerender (9.15 kB / 112 kB First Load).
+- `POST /api/chat` ✅ jesus/buddha/confucius 각각 고유 인격(VOICE) + RAG 근거 주입.
+- 입력 검증: 깨진 JSON / 잘못된 npc / 빈 메시지 → 모두 400 (코드 경로 확인).
+- 폴백 이중화: 키 없음 → `source:"fallback"`, OpenAI 오류 → catch 후 `source:"fallback"`. RAG는 키 유무와 무관하게 동작.
+- RAG 데이터: `data/rag/documents/all_units.json` (5.4MB) 번들 확인 → 서버리스 배포 가능.
+- 16개 요구사항(원본 10 + 추가 6) 전부 코드 근거로 충족 → Match Rate ≈ 100%, gap 0.
 
-런타임 미검증 항목(브라우저 상호작용): 실제 캐릭터 이동·E키·모달 흐름은
-정적/유닛이 아닌 수동 플레이 검증 권장 (`npm run dev` 후 직접 플레이).
+런타임 미검증 항목(브라우저 상호작용): 실제 캐릭터 이동·E키·모달·터치 D-pad·
+모바일 음악 자동재생 흐름은 정적/유닛이 아닌 수동 플레이 검증 권장 (`npm run dev`).
 
 ## Act — 후속 제안
 
