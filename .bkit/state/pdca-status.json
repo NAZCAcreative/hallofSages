@@ -1,0 +1,1371 @@
+{
+  "version": "3.0",
+  "lastUpdated": "2026-06-07T10:35:26.585Z",
+  "activeFeatures": [
+    "HallofSages",
+    "login",
+    "register",
+    "new",
+    "[id]",
+    "game",
+    "chat"
+  ],
+  "primaryFeature": "HallofSages",
+  "features": {
+    "HallofSages": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-07T04:43:19.063Z",
+        "lastUpdated": "2026-06-07T10:18:27.233Z"
+      },
+      "lastFile": "/mnt/d/aiCording/project/HallofSages/src/app/page.tsx"
+    },
+    "login": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-07T04:48:08.065Z",
+        "lastUpdated": "2026-06-07T04:48:08.065Z"
+      },
+      "lastFile": "/mnt/d/aiCording/project/HallofSages/src/app/login/page.tsx"
+    },
+    "register": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-07T04:48:56.662Z",
+        "lastUpdated": "2026-06-07T04:48:56.662Z"
+      },
+      "lastFile": "/mnt/d/aiCording/project/HallofSages/src/app/register/page.tsx"
+    },
+    "new": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-07T04:49:16.856Z",
+        "lastUpdated": "2026-06-07T04:49:16.856Z"
+      },
+      "lastFile": "/mnt/d/aiCording/project/HallofSages/src/app/questions/new/page.tsx"
+    },
+    "[id]": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-07T04:49:47.970Z",
+        "lastUpdated": "2026-06-07T04:49:47.970Z"
+      },
+      "lastFile": "/mnt/d/aiCording/project/HallofSages/src/app/questions/[id]/page.tsx"
+    },
+    "game": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-07T05:01:01.297Z",
+        "lastUpdated": "2026-06-07T10:35:26.583Z"
+      },
+      "lastFile": "/mnt/d/aiCording/project/HallofSages/src/game/MainScene.ts"
+    },
+    "chat": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-07T05:01:33.354Z",
+        "lastUpdated": "2026-06-07T10:33:39.817Z"
+      },
+      "lastFile": "/mnt/d/aiCording/project/HallofSages/src/app/api/chat/route.ts"
+    }
+  },
+  "pipeline": {
+    "currentPhase": 1,
+    "level": "Dynamic",
+    "phaseHistory": []
+  },
+  "session": {
+    "startedAt": "2026-06-07T04:35:57.913Z",
+    "onboardingCompleted": false,
+    "lastActivity": "2026-06-07T10:35:26.585Z"
+  },
+  "history": [
+    {
+      "timestamp": "2026-06-07T04:43:19.068Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T04:45:12.282Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T04:45:29.395Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T04:45:51.699Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T04:46:29.648Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T04:47:08.939Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T04:47:20.429Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T04:47:30.105Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T04:47:53.050Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T04:48:08.067Z",
+      "feature": "login",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T04:48:56.664Z",
+      "feature": "register",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T04:49:10.139Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T04:49:16.863Z",
+      "feature": "new",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T04:49:26.677Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T04:49:47.972Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:01:01.300Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:01:22.360Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:01:33.357Z",
+      "feature": "chat",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:01:46.519Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:02:10.382Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:02:44.176Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:02:50.480Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:03:14.300Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:03:38.487Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:03:44.847Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:05:41.082Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:05:44.551Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:33:25.290Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:33:43.285Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:33:54.994Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:34:05.742Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:43:40.939Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:50:35.025Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:51:07.193Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:53:17.157Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:53:26.386Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T05:53:34.044Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T06:11:27.704Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T06:11:35.898Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T06:11:42.363Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T06:12:00.627Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T06:14:56.187Z",
+      "feature": "chat",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T06:16:09.022Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T06:19:05.133Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T06:52:49.797Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T06:53:03.778Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T06:53:11.151Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T06:54:03.019Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T07:39:33.850Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T07:40:02.731Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T07:40:12.777Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T07:40:45.460Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T07:41:57.737Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T07:43:43.819Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T07:46:23.808Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T07:46:33.038Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T07:48:30.726Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T07:54:54.796Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T07:55:10.319Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T07:55:23.458Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T07:56:47.172Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:04:11.126Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:05:44.090Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:06:10.086Z",
+      "feature": "chat",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:11:55.145Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:15:41.976Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:20:12.214Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:25:23.136Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:25:40.046Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:25:49.029Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:26:08.813Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:26:41.870Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:26:49.654Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:29:45.121Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:30:03.044Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:30:12.535Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:30:27.915Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:30:34.258Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:34:15.119Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:34:36.764Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:34:50.476Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:35:02.121Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:35:17.855Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:35:38.019Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:44:09.378Z",
+      "feature": "chat",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:44:22.554Z",
+      "feature": "chat",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:44:43.842Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:45:09.876Z",
+      "feature": "chat",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:45:43.581Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:48:39.228Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:49:06.801Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:49:21.138Z",
+      "feature": "chat",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:55:29.713Z",
+      "feature": "chat",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:55:43.660Z",
+      "feature": "chat",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:57:34.177Z",
+      "feature": "chat",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T08:57:43.946Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:00:36.298Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:02:03.804Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:02:16.726Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:02:29.302Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:02:38.401Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:03:11.506Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:03:19.603Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:03:28.432Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:04:28.659Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:04:48.217Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:05:38.567Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:05:52.974Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:06:04.205Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:10:23.212Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:12:43.434Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:13:14.064Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:13:21.224Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:13:27.490Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:13:41.750Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:14:33.009Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:15:18.809Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:15:46.822Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:15:55.203Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:16:20.152Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:18:16.237Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:18:52.813Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:21:17.194Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:23:32.850Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:26:44.962Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:27:02.874Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:27:18.199Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:27:29.107Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:27:52.730Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:28:06.063Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:33:22.171Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:34:20.670Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:37:35.122Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:37:49.096Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:38:07.281Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:38:17.914Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:38:29.010Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:39:09.730Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:39:23.283Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:40:01.981Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:40:09.423Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:40:21.725Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:40:40.514Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:40:46.916Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:40:53.318Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:40:58.841Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:41:23.606Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:41:32.267Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:45:17.932Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:45:27.743Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:46:20.192Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:46:29.631Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:46:40.006Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:47:06.224Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:47:24.102Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:47:33.985Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:47:44.315Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:47:56.776Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:48:03.758Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:49:04.170Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:51:19.433Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:51:31.152Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:51:55.637Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:52:20.481Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:52:39.092Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:53:10.826Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:53:19.971Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:54:09.529Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:54:18.628Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:54:49.875Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:56:44.573Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:57:55.517Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T09:58:03.733Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:00:04.620Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:03:52.701Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:04:17.204Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:06:22.132Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:06:32.806Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:06:51.393Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:07:05.425Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:07:13.377Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:07:27.727Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:07:52.940Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:08:05.200Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:11:30.165Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:11:40.377Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:11:49.148Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:12:00.658Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:13:34.093Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:15:24.400Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:16:47.166Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:16:54.991Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:17:34.250Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:17:44.865Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:18:19.541Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:18:27.237Z",
+      "feature": "HallofSages",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:19:19.537Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:20:00.011Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:20:12.420Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:20:20.256Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:21:33.288Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:22:44.759Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:32:13.566Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:33:39.820Z",
+      "feature": "chat",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:35:17.269Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-07T10:35:26.585Z",
+      "feature": "game",
+      "phase": "do",
+      "action": "updated"
+    }
+  ],
+  "stateMachine": {
+    "defaultWorkflow": "default",
+    "activeWorkflows": {},
+    "totalTransitions": 0
+  },
+  "automation": {
+    "globalLevel": 2,
+    "trustScore": 40,
+    "pendingApprovals": 0,
+    "lastGateResult": null
+  },
+  "team": {
+    "enabled": true,
+    "stateFile": ".bkit/runtime/agent-state.json",
+    "eventsFile": ".bkit/runtime/agent-events.jsonl"
+  }
+}

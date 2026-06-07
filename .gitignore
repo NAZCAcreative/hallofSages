@@ -1,0 +1,17 @@
+/node_modules
+/.next/
+/out/
+/build
+.DS_Store
+*.pem
+npm-debug.log*
+.env*.local
+.env
+next-env.d.ts
+.vercel
+*.tsbuildinfo
+
+# Large unused source artifacts (app only needs data/rag/documents + characters)
+/sound
+/data/rag/wisdom_rag_index/
+/data/rag/three_saints_index.pkl

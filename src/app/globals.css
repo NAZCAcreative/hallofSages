@@ -1,0 +1,73 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Gowun+Batang:wght@700&family=Song+Myung&display=swap");
+@import "tailwindcss";
+
+.title-en {
+  font-family: "Cinzel", ui-serif, serif;
+  letter-spacing: 0.04em;
+}
+.title-ko {
+  font-family: "Song Myung", ui-serif, serif;
+  letter-spacing: 0.02em;
+}
+
+html,
+body {
+  background: #07060d;
+  color: #f2f5f3;
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+canvas {
+  display: block;
+}
+
+/* ===== Mystical background animations ===== */
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-28px) translateX(12px);
+  }
+}
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.06);
+  }
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mystic-anim {
+    animation: none !important;
+  }
+}
