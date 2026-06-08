@@ -3,7 +3,7 @@
 // build/model is actually live after a deploy.
 //
 // 👉 Bump APP_BUILD by one on every deploy.
-export const APP_BUILD = 1;
+export const APP_BUILD = 2;
 
 // Default OpenAI model when OPENAI_MODEL env is not set. The API routes and the
 // on-screen badge both read this, so they never drift apart.
