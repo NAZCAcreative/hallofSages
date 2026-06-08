@@ -16,5 +16,12 @@ next-env.d.ts
 /data/rag/wisdom_rag_index/
 /data/rag/three_saints_index.pkl
 
+# bibleIndex: the app only needs bible_units.json + passages.i8 (+meta).
+# The Python-only indexes are huge (~380MB) and unused by the Node app.
+/data/rag/bibleIndex/*.pkl
+/data/rag/bibleIndex/*.npz
+/data/rag/bibleIndex/*.joblib
+/data/rag/bibleIndex/dense_shards/
+
 # bkit local tooling state (may contain session secrets)
 .bkit/
