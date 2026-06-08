@@ -38,7 +38,7 @@ export const NPCS: Npc[] = [
     title: "Jesus",
     color: 0xfcd34d, // warm gold
     fx: 0.28,
-    fy: 0.4,
+    fy: 0.6, // lower-mid (slightly raised; chat panel sits above)
     asset: "jesus",
   },
   {
@@ -47,7 +47,7 @@ export const NPCS: Npc[] = [
     title: "Buddha",
     color: 0xf59e0b, // amber
     fx: 0.5,
-    fy: 0.4,
+    fy: 0.6, // lower-mid (slightly raised; chat panel sits above)
     asset: "buddha",
   },
   {
@@ -56,16 +56,16 @@ export const NPCS: Npc[] = [
     title: "Confucius",
     color: 0x60a5fa, // calm blue
     fx: 0.72,
-    fy: 0.4,
+    fy: 0.6, // lower-mid (slightly raised; chat panel sits above)
     asset: "confucius",
   },
 ];
 
 // Portrait (mobile) layout: a roomy triangle so big sages don't overlap.
 const PORTRAIT_POS: Record<NpcId, { fx: number; fy: number }> = {
-  jesus: { fx: 0.26, fy: 0.3 },
-  confucius: { fx: 0.74, fy: 0.3 },
-  buddha: { fx: 0.5, fy: 0.5 },
+  jesus: { fx: 0.26, fy: 0.62 },
+  confucius: { fx: 0.74, fy: 0.62 },
+  buddha: { fx: 0.5, fy: 0.62 }, // same height as the other two (was 0.74)
 };
 
 /** Fractional position for a sage, chosen by orientation. */

@@ -48,6 +48,7 @@ export default function GameShell() {
   const [chatSources, setChatSources] = useState<Source[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [advLoading, setAdvLoading] = useState(false); // 고급답변 (Jesus)
   const [open, setOpen] = useState(false);
 
   // Ask-all (Enter key)
@@ -61,6 +62,7 @@ export default function GameShell() {
   // RAG sources drawer (right sliding panel)
   const [drawer, setDrawer] = useState<{ name: string; sources: Source[] } | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [scoreHelp, setScoreHelp] = useState(false); // 관련도 설명 팝업
 
   // Conversation log (right chat-style panel)
   const [log, setLog] = useState<LogEntry[]>([]);
@@ -147,7 +149,11 @@ export default function GameShell() {
     setDrawer({ name, sources });
   }
 
-  const portrait = world.h > world.w; // mobile uses centered chat layout
+  // Top chat panel height, packaged with the sage positions: desktop sages sit
+  // a touch higher, so the panel is a bit shorter there to keep clear of them.
+  const portrait = world.h > world.w;
+  const panelHeight = portrait ? "48%" : "44%";
+
   function toggleLog() {
     closeDrawer();
     setLogOpen((v) => !v);
@@ -167,29 +173,45 @@ export default function GameShell() {
     bus.emit("resume", undefined);
   }
 
-  async function send() {
+  // Send the current question in one of two modes, chosen up-front:
+  //  • "normal"   → /api/chat   (conversational answer; all sages)
+  //  • "advanced" → /api/bible  (Jesus only: precise verse citation + refs)
+  async function send(mode: "normal" | "advanced" = "normal") {
     const npc = chatNpc;
     const text = input.trim();
-    if (!npc || !text || loading) return;
+    if (!npc || !text || loading || advLoading) return;
+    const advanced = mode === "advanced" && npc.id === "jesus";
 
     const history = messages;
     const next = [...messages, { role: "user", content: text } as Turn];
     setMessages(next);
     setInput("");
-    setLoading(true);
+    if (advanced) setAdvLoading(true);
+    else setLoading(true);
     addLog({ role: "user", name: "나", content: text });
 
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch(advanced ? "/api/bible" : "/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ npc: npc.id, message: text, history }),
+        body: JSON.stringify(
+          advanced
+            ? { message: text, history }
+            : { npc: npc.id, message: text, history },
+        ),
       });
       const data = await res.json();
       const reply = data.reply ?? data.error ?? "…";
-      setMessages([...next, { role: "assistant", content: reply }]);
+      const content = advanced ? `📖 고급답변\n\n${reply}` : reply;
+      setMessages([...next, { role: "assistant", content }]);
       setChatSources(data.sources ?? []);
-      addLog({ role: "sage", npc, name: npc.name, content: reply, sources: data.sources ?? [] });
+      addLog({
+        role: "sage",
+        npc,
+        name: advanced ? `${npc.name} · 고급답변` : npc.name,
+        content: reply,
+        sources: data.sources ?? [],
+      });
       bus.emit("sageAnswered", { npc: npc.id });
     } catch {
       setMessages([
@@ -197,7 +219,8 @@ export default function GameShell() {
         { role: "assistant", content: "(연결에 실패했어요. 다시 시도해 주세요.)" },
       ]);
     } finally {
-      setLoading(false);
+      if (advanced) setAdvLoading(false);
+      else setLoading(false);
       inputRef.current?.focus();
     }
   }
@@ -300,99 +323,41 @@ export default function GameShell() {
             className="absolute inset-0 cursor-default bg-black/25"
           />
 
-          {!portrait &&
-            NPCS.map((n) => {
-              const a = answers[n.id];
-              if (!a) return null;
-              return (
-                <BubbleAnchor key={n.id} npc={n} open={allOpen} width="min(200px, 26vw)">
-                  <div className="flex shrink-0 items-center gap-2 border-b-2 border-black/15 px-3 py-1.5">
-                    <Avatar npc={n} size={24} />
-                    <span className="text-sm font-extrabold">{n.name}</span>
-                  </div>
-                  <div className="min-h-0 flex-1 overflow-y-auto px-3 py-2 text-[13.5px] leading-relaxed">
-                    {a.loading ? (
-                      <span className="inline-flex gap-1 py-1">
-                        <Dot /> <Dot delay="0.15s" /> <Dot delay="0.3s" />
-                      </span>
-                    ) : (
-                      <span className="whitespace-pre-wrap">
-                        <Typewriter text={a.content} />
-                      </span>
-                    )}
-                  </div>
-                  {!a.loading && (
-                    <SourceBar
-                      count={a.sources.length}
-                      onClick={() => openDrawer(n.name, a.sources)}
-                    />
-                  )}
-                </BubbleAnchor>
-              );
-            })}
-
-          {/* Desktop: bottom input bar */}
-          {!portrait && (
-            <div className="absolute bottom-4 left-1/2 z-30 w-full max-w-xl -translate-x-1/2 px-3">
-              <div className="flex items-end gap-2 rounded-2xl border-[3px] border-black bg-[#fdfcf3] p-2 shadow-[5px_5px_0_rgba(0,0,0,0.35)]">
-                <textarea
-                  ref={sharedRef}
-                  value={sharedInput}
-                  onChange={(e) => setSharedInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      submitAll();
-                    }
-                    if (e.key === "Escape") closeAll();
-                  }}
-                  rows={1}
-                  placeholder="세 분께 동시에 여쭤보세요… (Enter 전송, Esc 닫기)"
-                  className="max-h-24 flex-1 resize-none rounded-xl border-2 border-black/20 bg-white px-3 py-1.5 text-[14px] text-black outline-none focus:border-black/50"
-                />
-                <button
-                  onClick={submitAll}
-                  disabled={!sharedInput.trim() || sending}
-                  className="rounded-xl border-2 border-black bg-amber-400 px-4 py-1.5 text-sm font-bold text-black hover:bg-amber-300 disabled:opacity-40"
-                >
-                  질문
-                </button>
+          {/* Ask-all: same top WIDE panel as the 1:1 chat, so it never covers
+              the sages (lower third). Three answers scroll inside with the wheel. */}
+          <div
+            className="absolute left-1/2 top-[2%] z-10 origin-top"
+            style={{
+              width: "min(920px, 95%)",
+              height: panelHeight,
+              transform: `translateX(-50%) scale(${allOpen ? 1 : 0.92})`,
+              opacity: allOpen ? 1 : 0,
+              transition:
+                "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.18s ease",
+            }}
+          >
+            <div
+              onWheel={(e) => e.stopPropagation()}
+              className="flex h-full flex-col overflow-hidden rounded-2xl border-[3px] border-black bg-[#fdfcf3] text-black shadow-[6px_6px_0_rgba(0,0,0,0.35)]"
+            >
+              <div className="flex shrink-0 items-center gap-2 border-b-2 border-black/15 px-4 py-2">
+                <span className="font-extrabold">🙏 세 현자께 동시에 묻기</span>
                 <button
                   onClick={closeAll}
-                  className="rounded-xl px-2 py-1.5 text-sm font-bold text-black/50 hover:text-black"
+                  className="ml-auto rounded-md px-1.5 text-lg leading-none text-black/40 hover:text-black"
+                  aria-label="닫기"
                 >
                   ✕
                 </button>
               </div>
-            </div>
-          )}
 
-          {/* Mobile: one centered card with the three answers stacked vertically */}
-          {portrait && (
-            <div className="absolute inset-0 flex items-center justify-center p-3">
-              <div
-                className="flex max-h-[86%] w-[min(440px,94vw)] flex-col overflow-hidden rounded-[24px] border-[3px] border-black bg-[#fdfcf3] text-black shadow-[6px_6px_0_rgba(0,0,0,0.35)]"
-                style={{
-                  transform: `scale(${allOpen ? 1 : 0.6})`,
-                  opacity: allOpen ? 1 : 0,
-                  transition:
-                    "transform 0.34s cubic-bezier(0.34,1.56,0.64,1), opacity 0.18s ease",
-                }}
-              >
-                <div className="flex shrink-0 items-center gap-2 border-b-2 border-black/15 px-4 py-2">
-                  <span className="font-extrabold">세 현자께 묻기</span>
-                  <button
-                    onClick={closeAll}
-                    className="ml-auto rounded-md px-1.5 text-lg leading-none text-black/40 hover:text-black"
-                  >
-                    ✕
-                  </button>
-                </div>
-                <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-3">
+              {/* Scroll area: 3 columns on desktop, stacked on mobile */}
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                   {NPCS.map((n) => {
                     const a = answers[n.id];
                     return (
-                      <div key={n.id} className="rounded-2xl bg-black/[0.05] p-2.5">
+                      <div key={n.id} className="flex flex-col rounded-2xl bg-black/[0.05] p-2.5">
                         <div className="mb-1 flex items-center gap-2">
                           <Avatar npc={n} size={26} />
                           <span className="text-sm font-extrabold">{n.name}</span>
@@ -426,33 +391,34 @@ export default function GameShell() {
                     );
                   })}
                 </div>
-                <div className="flex shrink-0 items-end gap-2 border-t-2 border-black/15 p-2.5">
-                  <textarea
-                    ref={sharedRef}
-                    value={sharedInput}
-                    onChange={(e) => setSharedInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        submitAll();
-                      }
-                      if (e.key === "Escape") closeAll();
-                    }}
-                    rows={1}
-                    placeholder="세 분께 동시에 여쭤보세요…"
-                    className="max-h-24 flex-1 resize-none rounded-xl border-2 border-black/20 bg-white px-3 py-1.5 text-[14px] text-black outline-none focus:border-black/50"
-                  />
-                  <button
-                    onClick={submitAll}
-                    disabled={!sharedInput.trim() || sending}
-                    className="rounded-xl border-2 border-black bg-amber-400 px-4 py-1.5 text-sm font-bold text-black hover:bg-amber-300 disabled:opacity-40"
-                  >
-                    질문
-                  </button>
-                </div>
+              </div>
+
+              <div className="flex shrink-0 items-end gap-2 border-t-2 border-black/15 p-2.5">
+                <textarea
+                  ref={sharedRef}
+                  value={sharedInput}
+                  onChange={(e) => setSharedInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      submitAll();
+                    }
+                    if (e.key === "Escape") closeAll();
+                  }}
+                  rows={1}
+                  placeholder="세 분께 동시에 여쭤보세요… (Enter 전송, Esc 닫기)"
+                  className="max-h-24 flex-1 resize-none rounded-xl border-2 border-black/20 bg-white px-3 py-1.5 text-[14px] text-black outline-none focus:border-black/50"
+                />
+                <button
+                  onClick={submitAll}
+                  disabled={!sharedInput.trim() || sending}
+                  className="rounded-xl border-2 border-black bg-amber-400 px-4 py-1.5 text-sm font-bold text-black hover:bg-amber-300 disabled:opacity-40"
+                >
+                  질문
+                </button>
               </div>
             </div>
-          )}
+          </div>
         </div>
       )}
 
@@ -464,12 +430,23 @@ export default function GameShell() {
             aria-label="대화 닫기"
             className="absolute inset-0 cursor-default bg-black/25"
           />
-          <BubbleAnchor
-            npc={chatNpc}
-            open={open}
-            centered={portrait}
-            width={portrait ? "min(440px, 94vw)" : "min(360px, 92vw)"}
+          {/* 1:1 chat lives as a WIDE panel pinned to the top, so it never
+              covers the sages (who stand in the lower third). */}
+          <div
+            className="absolute left-1/2 top-[2%] z-10 origin-top"
+            style={{
+              width: "min(920px, 95%)",
+              height: panelHeight,
+              transform: `translateX(-50%) scale(${open ? 1 : 0.92})`,
+              opacity: open ? 1 : 0,
+              transition:
+                "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.18s ease",
+            }}
           >
+            <div
+              onWheel={(e) => e.stopPropagation()}
+              className="flex h-full flex-col overflow-hidden rounded-2xl border-[3px] border-black bg-[#fdfcf3] text-black shadow-[6px_6px_0_rgba(0,0,0,0.35)]"
+            >
             <div className="flex shrink-0 items-center gap-2 border-b-2 border-black/15 px-4 py-2">
               <Avatar npc={chatNpc} size={30} />
               <span className="font-extrabold">{chatNpc.name}</span>
@@ -485,7 +462,7 @@ export default function GameShell() {
 
             <div
               ref={scrollRef}
-              className="flex min-h-[80px] flex-1 flex-col gap-2 overflow-y-auto px-3 py-3"
+              className="flex min-h-[80px] flex-1 flex-col gap-2 overflow-y-auto overscroll-contain px-3 py-3"
             >
               {messages.length === 0 && !loading && (
                 <p className="my-auto text-center text-sm text-black/40">
@@ -511,7 +488,7 @@ export default function GameShell() {
                   </div>
                 ),
               )}
-              {loading && (
+              {(loading || advLoading) && (
                 <div className="flex justify-start">
                   <div className="rounded-2xl rounded-bl-md bg-black/[0.06] px-3 py-2">
                     <span className="inline-flex gap-1">
@@ -522,14 +499,14 @@ export default function GameShell() {
               )}
             </div>
 
-            {messages.some((m) => m.role === "assistant") && !loading && (
+            {messages.some((m) => m.role === "assistant") && !loading && !advLoading && (
               <SourceBar
                 count={chatSources.length}
                 onClick={() => openDrawer(chatNpc.name, chatSources)}
               />
             )}
 
-            <div className="flex shrink-0 items-end gap-2 border-t-2 border-black/15 p-2.5">
+            <div className="flex shrink-0 flex-col gap-2 border-t-2 border-black/15 p-2.5">
               <textarea
                 ref={inputRef}
                 value={input}
@@ -537,30 +514,56 @@ export default function GameShell() {
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
-                    send();
+                    send("normal");
                   }
                   if (e.key === "Escape") closeChat();
                 }}
                 rows={1}
-                placeholder="여기에 입력… (Enter 전송)"
-                className="max-h-24 flex-1 resize-none rounded-xl border-2 border-black/20 bg-white px-3 py-1.5 text-[14px] outline-none focus:border-black/50"
+                placeholder={
+                  chatNpc.id === "jesus"
+                    ? "여기에 입력… (Enter=일반답변)"
+                    : "여기에 입력… (Enter 전송)"
+                }
+                className="max-h-24 w-full resize-none rounded-xl border-2 border-black/20 bg-white px-3 py-1.5 text-[14px] outline-none focus:border-black/50"
               />
-              <button
-                onClick={send}
-                disabled={!input.trim() || loading}
-                className="rounded-xl border-2 border-black bg-amber-400 px-3 py-1.5 text-sm font-bold hover:bg-amber-300 disabled:opacity-40"
-              >
-                질문
-              </button>
+              {chatNpc.id === "jesus" ? (
+                <div className="flex items-stretch gap-2">
+                  <button
+                    onClick={() => send("normal")}
+                    disabled={!input.trim() || loading || advLoading}
+                    className="flex-1 rounded-xl border-2 border-black bg-amber-400 px-3 py-1.5 text-sm font-bold hover:bg-amber-300 disabled:opacity-40"
+                    title="현자와 대화하듯 위로·권면하는 일반답변"
+                  >
+                    {loading ? "답하는 중…" : "🗨️ 일반답변"}
+                  </button>
+                  <button
+                    onClick={() => send("advanced")}
+                    disabled={!input.trim() || loading || advLoading}
+                    className="flex-1 rounded-xl border-2 border-black bg-indigo-300 px-3 py-1.5 text-sm font-bold text-indigo-950 hover:bg-indigo-200 disabled:opacity-40"
+                    title="성경 색인을 깊이 참고해 핵심 구절을 정확히 인용·풀이 (참조 구절 포함)"
+                  >
+                    {advLoading ? "성경 살피는 중…" : "📖 고급답변 ✦"}
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => send("normal")}
+                  disabled={!input.trim() || loading}
+                  className="self-end rounded-xl border-2 border-black bg-amber-400 px-4 py-1.5 text-sm font-bold hover:bg-amber-300 disabled:opacity-40"
+                >
+                  질문
+                </button>
+              )}
             </div>
-          </BubbleAnchor>
+            </div>
+          </div>
         </div>
       )}
 
       {/* Right-edge tab to toggle the conversation log */}
       <button
         onClick={toggleLog}
-        className="absolute right-0 top-20 z-40 flex items-center gap-1 rounded-l-xl border-2 border-r-0 border-amber-400/70 bg-black/75 py-3 pl-2 pr-1.5 text-xs font-bold text-white shadow-lg hover:bg-black"
+        className="absolute right-0 bottom-[26%] z-40 flex items-center gap-1 rounded-l-xl border-2 border-r-0 border-amber-400/70 bg-black/75 py-3 pl-2 pr-1.5 text-xs font-bold text-white shadow-lg hover:bg-black"
         style={{ writingMode: "vertical-rl" }}
         title="질문 로그 열기/닫기"
       >
@@ -684,7 +687,18 @@ export default function GameShell() {
                       <span className="rounded bg-emerald-200 px-1.5 py-0.5 text-emerald-900">
                         {s.category}
                       </span>
-                      <span className="ml-auto text-black/35">관련도 {s.score}</span>
+                      <span className="ml-auto flex items-center gap-1 text-black/35">
+                        관련도 {s.score}
+                        <button
+                          type="button"
+                          onClick={() => setScoreHelp(true)}
+                          aria-label="관련도란?"
+                          title="관련도가 어떻게 정해지는지 보기"
+                          className="flex h-4 w-4 items-center justify-center rounded-full border border-black/30 text-[10px] font-bold leading-none text-black/50 hover:bg-black/10"
+                        >
+                          ?
+                        </button>
+                      </span>
                     </div>
                     <p className="whitespace-pre-wrap text-[13px] leading-relaxed text-black/80">
                       {s.text}
@@ -696,74 +710,56 @@ export default function GameShell() {
           </div>
         </>
       )}
-    </div>
-  );
-}
 
-/**
- * A comic speech bubble anchored just above an NPC's head. It grows upward but
- * is height-capped to the space above the head (with internal scroll), so the
- * top of the bubble never gets clipped by the game container's top edge.
- */
-function BubbleAnchor({
-  npc,
-  open,
-  width,
-  centered,
-  children,
-}: {
-  npc: Npc;
-  open: boolean;
-  width: string;
-  centered?: boolean;
-  children: React.ReactNode;
-}) {
-  // Mobile: render a centered card instead of a head-anchored bubble.
-  if (centered) {
-    return (
-      <div className="absolute inset-0 flex items-center justify-center p-3">
-        <div
-          className="origin-center"
-          style={{
-            width,
-            maxHeight: "82%",
-            transform: `scale(${open ? 1 : 0.6})`,
-            opacity: open ? 1 : 0,
-            transition:
-              "transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.18s ease",
-          }}
-        >
-          <div className="flex max-h-[82vh] flex-col overflow-hidden rounded-[24px] border-[3px] border-black bg-[#fdfcf3] text-black shadow-[6px_6px_0_rgba(0,0,0,0.35)]">
-            {children}
+      {/* ===== 관련도 설명 레이어 팝업 ===== */}
+      {scoreHelp && (
+        <>
+          <button
+            onClick={() => setScoreHelp(false)}
+            aria-label="닫기"
+            className="absolute inset-0 z-[60] cursor-default bg-black/55"
+          />
+          <div className="absolute left-1/2 top-1/2 z-[61] w-[min(380px,90%)] -translate-x-1/2 -translate-y-1/2 rounded-2xl border-[3px] border-black bg-[#fdfcf3] p-4 text-black shadow-[6px_6px_0_rgba(0,0,0,0.4)]">
+            <div className="mb-2 flex items-center gap-2">
+              <span className="text-lg">❓</span>
+              <span className="font-extrabold">‘관련도’는 어떻게 정해지나요?</span>
+              <button
+                onClick={() => setScoreHelp(false)}
+                className="ml-auto rounded-md px-1.5 text-lg leading-none text-black/40 hover:text-black"
+                aria-label="닫기"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="space-y-2 text-[13px] leading-relaxed text-black/75">
+              <p>
+                질문과 이 문헌이 얼마나 맞닿아 있는지를 점수로 매긴 값입니다. 두
+                가지 검색을 <b>RRF</b>(Reciprocal Rank Fusion)로 합쳐 계산해요 —
+                각 검색의 순위를 <b>1/(60+순위)</b>로 점수화해 더한 뒤, 합산이 높은
+                순으로 근거를 정렬합니다.
+              </p>
+              <p>
+                <b className="text-black">① 키워드 검색(BM25)</b> — 질문 단어가 그
+                문헌에 얼마나, 얼마나 드물게(=변별력 있게) 나오는지로 점수화.
+              </p>
+              <p>
+                <b className="text-black">② 의미 검색(Dense·Semantic 임베딩)</b> —
+                문장을 벡터로 바꿔 <b>코사인 유사도</b>로 비교. 단어가 안 겹쳐도
+                뜻이 비슷하면 찾아냅니다.
+              </p>
+              <p>
+                <b className="text-black">🗨️ 일반답변</b>과{" "}
+                <b className="text-black">📖 고급답변</b> 모두 ①+②를 결합한
+                하이브리드입니다. 고급답변은 성경 전체 색인(약 3.2만 구절)에 dense
+                임베딩(text-embedding-3-small)을 적용해, 더 정밀한 구절을 찾습니다.
+              </p>
+              <p className="text-black/45">
+                ※ 점수는 정렬을 위한 상대적 수치라 절대값 자체에 큰 의미는 없습니다.
+              </p>
+            </div>
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  const topPct = npc.fy * 100;
-  const gap = 4; // % above the head
-  const topMargin = 3; // always keep this much space below the container top
-  const maxH = Math.max(topPct - gap - topMargin, 22); // never overflow the top
-
-  return (
-    <div
-      className="absolute origin-bottom"
-      style={{
-        left: `${npc.fx * 100}%`,
-        bottom: `${100 - topPct + gap}%`,
-        width,
-        maxHeight: `${maxH}%`,
-        transform: `translateX(-50%) scale(${open ? 1 : 0.55})`,
-        opacity: open ? 1 : 0,
-        transition:
-          "transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.18s ease",
-      }}
-    >
-      {/* long content scrolls inside; the bubble itself never exceeds maxHeight */}
-      <div className="flex max-h-full flex-col overflow-hidden rounded-[24px] border-[3px] border-black bg-[#fdfcf3] text-black shadow-[6px_6px_0_rgba(0,0,0,0.35)]">
-        {children}
-      </div>
+        </>
+      )}
     </div>
   );
 }
