@@ -9,8 +9,11 @@ import type { NpcId } from "@/game/npcs";
 // retrieve grounding passages, answer with citations, return sources.
 export const runtime = "nodejs";
 
-const MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+const MODEL = process.env.OPENAI_MODEL || "gpt-5.5";
 const MAX_HISTORY = 12;
+// GPT-5 family (gpt-5, gpt-5.x) only accepts `max_completion_tokens` and the
+// default temperature; older models (gpt-4o…) use `max_tokens` + temperature.
+const IS_GPT5 = /^gpt-5/.test(MODEL);
 
 type ChatTurn = { role: "user" | "assistant"; content: string };
 
@@ -130,17 +133,23 @@ export async function POST(req: Request) {
 
   try {
     const client = new OpenAI({ apiKey });
-    const completion = await client.chat.completions.create({
+    const params: OpenAI.Chat.ChatCompletionCreateParamsNonStreaming = {
       model: MODEL,
-      temperature: 0.7,
-      // Headroom for Jesus's longer (6–9 sentence) answers without truncation.
-      max_tokens: 800,
       messages: [
         { role: "system", content: system },
         ...history,
         { role: "user", content: question },
       ],
-    });
+    };
+    if (IS_GPT5) {
+      // Includes reasoning tokens, so give generous headroom for Jesus's
+      // longer (6–9 sentence) answers; temperature must stay at the default.
+      params.max_completion_tokens = 2000;
+    } else {
+      params.temperature = 0.7;
+      params.max_tokens = 800;
+    }
+    const completion = await client.chat.completions.create(params);
 
     const reply =
       completion.choices[0]?.message?.content?.trim() ||
