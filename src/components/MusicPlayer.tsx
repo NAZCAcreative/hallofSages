@@ -57,25 +57,62 @@ export default function MusicPlayer() {
     }
   }, [volume]);
 
-  // Autoplay ASAP; if the browser blocks it, start on the first user interaction.
+  // Autoplay strategy:
+  //  1) Let the track buffer first — wait for the browser's "buffered enough to
+  //     play through" signal (canplaythrough), with a short timer as a fallback
+  //     so we never wait forever.
+  //  2) (A) Then try AUDIBLE autoplay; desktops / returning visitors with media
+  //     engagement get instant sound.
+  //  3) If audible autoplay is blocked, fall back to MUTED playback and unmute
+  //     on the first user gesture (reliable on mobile).
   useEffect(() => {
     if (!mounted) return;
     const audio = audioRef.current;
     if (!audio) return;
     audio.volume = volume;
-    const tryPlay = () => audio.play().then(() => setPlaying(true)).catch(() => {});
-    // Muted autoplay is allowed even on mobile — start it now (silently).
-    tryPlay();
-    // On the first user gesture, unmute (reliable on mobile) + ensure playing.
+
+    let started = false;
     const events = ["pointerdown", "keydown", "touchstart", "click"] as const;
+
+    const start = () => {
+      if (started) return;
+      started = true;
+      // (A) audible first…
+      audio.muted = false;
+      audio
+        .play()
+        .then(() => {
+          setMuted(false);
+          setPlaying(true);
+        })
+        .catch(() => {
+          // …blocked → muted playback, unmuted later by the first gesture.
+          audio.muted = true;
+          setMuted(true);
+          audio.play().then(() => setPlaying(true)).catch(() => {});
+        });
+    };
+
+    // (1) buffer term: play through-ready, or fall back after 3s.
+    const onReady = () => start();
+    audio.addEventListener("canplaythrough", onReady, { once: true });
+    const timer = setTimeout(start, 3000);
+
+    // First user gesture always guarantees audible playback.
     const onFirst = () => {
-      if (audioRef.current) audioRef.current.muted = false;
+      started = true;
+      audio.muted = false;
       setMuted(false);
-      tryPlay();
+      audio.play().then(() => setPlaying(true)).catch(() => {});
       events.forEach((e) => window.removeEventListener(e, onFirst));
     };
     events.forEach((e) => window.addEventListener(e, onFirst));
-    return () => events.forEach((e) => window.removeEventListener(e, onFirst));
+
+    return () => {
+      clearTimeout(timer);
+      audio.removeEventListener("canplaythrough", onReady);
+      events.forEach((e) => window.removeEventListener(e, onFirst));
+    };
   }, [mounted]);
 
   // Play the new track when it changes (if we were playing).
@@ -133,11 +170,14 @@ export default function MusicPlayer() {
         <audio
           ref={audioRef}
           src={track.src}
-          autoPlay
           muted={muted}
           onEnded={next}
           onPlay={() => setPlaying(true)}
-          onPause={() => setPlaying(false)}
+          // A track reaching its end fires `pause` (paused=true) right before
+          // `ended`; ignore that one so auto-advance keeps `playing` true.
+          onPause={() => {
+            if (!audioRef.current?.ended) setPlaying(false);
+          }}
           preload="auto"
         />
 
