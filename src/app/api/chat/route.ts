@@ -114,7 +114,8 @@ export async function POST(req: Request) {
     console.error("[/api/chat] RAG retrieval error:", err);
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  // Accept the misspelled OPEN_API_KEY too (common typo in some deploy configs).
+  const apiKey = process.env.OPENAI_API_KEY || process.env.OPEN_API_KEY;
   if (!apiKey) {
     return NextResponse.json({
       npc,

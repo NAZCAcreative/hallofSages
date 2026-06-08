@@ -166,7 +166,7 @@ function loadEmbeddings(): EmbStore | null {
 
 // Embed the query (normalized Float32) via OpenAI; null on any failure.
 export async function embedQuery(query: string, dim: number): Promise<Float32Array | null> {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY || process.env.OPEN_API_KEY;
   if (!apiKey) return null;
   try {
     const { default: OpenAI } = await import("openai");

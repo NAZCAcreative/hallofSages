@@ -78,7 +78,7 @@ export async function POST(req: Request) {
     console.error("[/api/bible] retrieval error:", err);
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY || process.env.OPEN_API_KEY;
   if (!apiKey) {
     return NextResponse.json({
       reply: fallbackReply(hits),
