@@ -723,7 +723,7 @@ export default function GameShell() {
                       </span>
                     </div>
                     <p className="whitespace-pre-wrap text-[13px] leading-relaxed text-black/80">
-                      {s.text}
+                      {formatVerses(s.text)}
                     </p>
                   </div>
                 ))}
@@ -784,6 +784,16 @@ export default function GameShell() {
       )}
     </div>
   );
+}
+
+// Wrap Bible verse references ("책 장:절") in [] and put each verse on its own
+// line so the verses inside a passage are visually separated. No-op for non-
+// Bible sources (불교/유학), whose text has no such reference pattern.
+function formatVerses(text: string): string {
+  return text
+    .replace(/\s*([가-힣]{2,8}\s?\d{1,3}:\d{1,3})\s*/g, "\n[$1] ")
+    .replace(/^\n/, "")
+    .trim();
 }
 
 function SourceBar({ count, onClick }: { count: number; onClick: () => void }) {

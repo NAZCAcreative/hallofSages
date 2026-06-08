@@ -221,22 +221,31 @@ function rrfFuse(
 export async function retrieveBible(query: string, k = 12): Promise<BibleHit[]> {
   const idx = getIndex();
   const bm25 = bm25Rank(idx, query);
+  const bm25Of = new Map(bm25.map((x) => [x.c.emb, x.score]));
 
-  let fused = bm25;
+  // RRF is used for *ordering*; the *displayed* relevance is the cosine
+  // similarity (0..1) — a true, per-result semantic score (not the tiny,
+  // clustered RRF values that looked "stuck" around 0.016).
+  let ordered = bm25;
+  let cosOf: Map<number, number> | null = null;
   const store = loadEmbeddings();
   if (store) {
     const qVec = await embedQuery(query, store.dim);
     if (qVec) {
-      const sem = semanticRank(idx, qVec, store).slice(0, 40);
-      fused = rrfFuse([bm25.slice(0, 40), sem]);
+      const sem = semanticRank(idx, qVec, store);
+      cosOf = new Map(sem.map((s) => [s.c.emb, s.score]));
+      ordered = rrfFuse([bm25.slice(0, 40), sem.slice(0, 40)]);
     }
   }
 
-  return fused.slice(0, k).map(({ c, score }) => ({
-    source: c.book,
-    loc: c.loc,
-    category: c.section || "성경",
-    text: c.text,
-    score: Math.round(score * 1000) / 1000,
-  }));
+  return ordered.slice(0, k).map(({ c }) => {
+    const rel = cosOf?.get(c.emb) ?? bm25Of.get(c.emb) ?? 0;
+    return {
+      source: c.book,
+      loc: c.loc,
+      category: c.section || "성경",
+      text: c.text,
+      score: Math.round(rel * 1000) / 1000,
+    };
+  });
 }
