@@ -103,7 +103,11 @@ export default function GameShell() {
       setChatSources([]);
       setInput("");
     });
-    const offAll = bus.on("askAll", () => setAskAll(true));
+    const offAll = bus.on("askAll", () => {
+      setAnswers({}); // fresh panel on every open
+      setSharedInput("");
+      setAskAll(true);
+    });
     return () => {
       offProx();
       offAsk();
@@ -239,6 +243,7 @@ export default function GameShell() {
   function closeAll() {
     setAskAll(false);
     setSharedInput("");
+    setAnswers({}); // clear so reopening starts fresh (log keeps the history)
     closeDrawer();
     bus.emit("resume", undefined);
   }
