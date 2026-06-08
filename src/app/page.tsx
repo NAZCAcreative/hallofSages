@@ -1,8 +1,11 @@
 import GameShell from "@/game/GameShell";
 import MysticBackground from "@/components/MysticBackground";
 import MusicPlayer from "@/components/MusicPlayer";
+import { APP_BUILD, DEFAULT_MODEL } from "@/lib/version";
 
 export default function Home() {
+  // Server-rendered, so it reflects the actual model the API will use.
+  const model = process.env.OPENAI_MODEL || DEFAULT_MODEL;
   return (
     <>
       <MysticBackground />
@@ -34,6 +37,12 @@ export default function Home() {
           예수님 · 부처님 · 공자님 — 세 현자가 당신의 물음을 기다립니다.
         </footer>
       </main>
+
+      {/* Always-visible build + model badge, pinned to the very bottom edge.
+          Bump APP_BUILD (src/lib/version.ts) each deploy to confirm what's live. */}
+      <div className="pointer-events-none fixed bottom-0 left-1.5 z-50 font-mono text-[10px] leading-none text-white/30">
+        build {APP_BUILD} · {model}
+      </div>
     </>
   );
 }

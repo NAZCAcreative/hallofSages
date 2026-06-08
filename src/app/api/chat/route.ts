@@ -4,16 +4,23 @@ import { PERSONAS } from "@/lib/npcPrompts";
 import { retrieve, type Passage } from "@/lib/rag";
 import { getCharacter } from "@/lib/characters";
 import type { NpcId } from "@/game/npcs";
+import { DEFAULT_MODEL } from "@/lib/version";
 
 // Design Ref: requirements 6, 7 + RAG — receive {npc, message, history},
 // retrieve grounding passages, answer with citations, return sources.
 export const runtime = "nodejs";
 
-const MODEL = process.env.OPENAI_MODEL || "gpt-5.5";
+const MODEL = process.env.OPENAI_MODEL || DEFAULT_MODEL;
 const MAX_HISTORY = 12;
 // GPT-5 family (gpt-5, gpt-5.x) only accepts `max_completion_tokens` and the
 // default temperature; older models (gpt-4o…) use `max_tokens` + temperature.
 const IS_GPT5 = /^gpt-5/.test(MODEL);
+// Fastest reasoning tier per model: point-version models (gpt-5.1…5.5) use
+// "none"; the base 5.0 line (gpt-5 / -mini / -nano) uses "minimal" — each
+// rejects the other's value. Override via OPENAI_REASONING_EFFORT.
+const REASONING =
+  process.env.OPENAI_REASONING_EFFORT ||
+  (/^gpt-5\.\d/.test(MODEL) ? "none" : "minimal");
 
 type ChatTurn = { role: "user" | "assistant"; content: string };
 
@@ -145,6 +152,8 @@ export async function POST(req: Request) {
       // Includes reasoning tokens, so give generous headroom for Jesus's
       // longer (6–9 sentence) answers; temperature must stay at the default.
       params.max_completion_tokens = 2000;
+      // "none" valid for gpt-5.x at the API even if the SDK union lags behind.
+      (params as { reasoning_effort?: string }).reasoning_effort = REASONING;
     } else {
       params.temperature = 0.7;
       params.max_tokens = 800;
