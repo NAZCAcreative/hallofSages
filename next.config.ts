@@ -12,6 +12,13 @@ const nextConfig: NextConfig = {
       "./data/rag/documents/embeddings.i8",
       "./data/rag/documents/embeddings.meta.json",
     ],
+    // 고급답변 (Jesus) reads the rich verse-level Bible index + its dense
+    // (semantic) embeddings for hybrid search.
+    "/api/bible": [
+      "./data/rag/bibleIndex/bible_units.json",
+      "./data/rag/bibleIndex/passages.i8",
+      "./data/rag/bibleIndex/passages.meta.json",
+    ],
   },
 };
 

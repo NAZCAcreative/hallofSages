@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "build:embeddings": "node scripts/build-embeddings.mjs"
+    "build:embeddings": "node scripts/build-embeddings.mjs",
+    "build:bible-embeddings": "node scripts/build-bible-embeddings.mjs"
   },
   "dependencies": {
     "next": "15.5.19",

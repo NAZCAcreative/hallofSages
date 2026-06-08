@@ -1,0 +1,143 @@
+{
+  "name": "bibleRag",
+  "version": "7.0.0-semantic-chunk",
+  "base_dir": "/content/drive/MyDrive/data/bibleRag",
+  "bible_txt_dir": "/content/drive/MyDrive/data/bibleRag/bible",
+  "index_dir": "/content/drive/MyDrive/data/bibleRag/index",
+  "num_units": 68283,
+  "dense_model_name": "intfloat/multilingual-e5-base",
+  "reranker_model_name": "BAAI/bge-reranker-v2-m3",
+  "device_used_for_build": "cuda",
+  "num_embedding_shards": 12,
+  "embedding_shards": [
+    {
+      "shard_id": 0,
+      "path": "/content/drive/MyDrive/data/bibleRag/index/dense_shards/dense_embeddings_shard_00.npz",
+      "start": 0,
+      "end": 5691,
+      "shape": [
+        5691,
+        768
+      ]
+    },
+    {
+      "shard_id": 1,
+      "path": "/content/drive/MyDrive/data/bibleRag/index/dense_shards/dense_embeddings_shard_01.npz",
+      "start": 5691,
+      "end": 11382,
+      "shape": [
+        5691,
+        768
+      ]
+    },
+    {
+      "shard_id": 2,
+      "path": "/content/drive/MyDrive/data/bibleRag/index/dense_shards/dense_embeddings_shard_02.npz",
+      "start": 11382,
+      "end": 17073,
+      "shape": [
+        5691,
+        768
+      ]
+    },
+    {
+      "shard_id": 3,
+      "path": "/content/drive/MyDrive/data/bibleRag/index/dense_shards/dense_embeddings_shard_03.npz",
+      "start": 17073,
+      "end": 22764,
+      "shape": [
+        5691,
+        768
+      ]
+    },
+    {
+      "shard_id": 4,
+      "path": "/content/drive/MyDrive/data/bibleRag/index/dense_shards/dense_embeddings_shard_04.npz",
+      "start": 22764,
+      "end": 28455,
+      "shape": [
+        5691,
+        768
+      ]
+    },
+    {
+      "shard_id": 5,
+      "path": "/content/drive/MyDrive/data/bibleRag/index/dense_shards/dense_embeddings_shard_05.npz",
+      "start": 28455,
+      "end": 34146,
+      "shape": [
+        5691,
+        768
+      ]
+    },
+    {
+      "shard_id": 6,
+      "path": "/content/drive/MyDrive/data/bibleRag/index/dense_shards/dense_embeddings_shard_06.npz",
+      "start": 34146,
+      "end": 39837,
+      "shape": [
+        5691,
+        768
+      ]
+    },
+    {
+      "shard_id": 7,
+      "path": "/content/drive/MyDrive/data/bibleRag/index/dense_shards/dense_embeddings_shard_07.npz",
+      "start": 39837,
+      "end": 45528,
+      "shape": [
+        5691,
+        768
+      ]
+    },
+    {
+      "shard_id": 8,
+      "path": "/content/drive/MyDrive/data/bibleRag/index/dense_shards/dense_embeddings_shard_08.npz",
+      "start": 45528,
+      "end": 51219,
+      "shape": [
+        5691,
+        768
+      ]
+    },
+    {
+      "shard_id": 9,
+      "path": "/content/drive/MyDrive/data/bibleRag/index/dense_shards/dense_embeddings_shard_09.npz",
+      "start": 51219,
+      "end": 56910,
+      "shape": [
+        5691,
+        768
+      ]
+    },
+    {
+      "shard_id": 10,
+      "path": "/content/drive/MyDrive/data/bibleRag/index/dense_shards/dense_embeddings_shard_10.npz",
+      "start": 56910,
+      "end": 62601,
+      "shape": [
+        5691,
+        768
+      ]
+    },
+    {
+      "shard_id": 11,
+      "path": "/content/drive/MyDrive/data/bibleRag/index/dense_shards/dense_embeddings_shard_11.npz",
+      "start": 62601,
+      "end": 68283,
+      "shape": [
+        5682,
+        768
+      ]
+    }
+  ],
+  "passage_window": 2,
+  "semantic_chunk_max_verses": 14,
+  "files": {
+    "units": "/content/drive/MyDrive/data/bibleRag/index/bible_units.json",
+    "bm25": "/content/drive/MyDrive/data/bibleRag/index/bible_bm25.pkl",
+    "tfidf_vectorizer": "/content/drive/MyDrive/data/bibleRag/index/bible_tfidf_vectorizer.joblib",
+    "tfidf_matrix": "/content/drive/MyDrive/data/bibleRag/index/bible_tfidf_matrix.npz",
+    "embedding_shard_dir": "/content/drive/MyDrive/data/bibleRag/index/dense_shards"
+  }
+}

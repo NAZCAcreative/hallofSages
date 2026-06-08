@@ -63,7 +63,7 @@ function loadUnits(): Unit[] {
 // Tokenize: Hangul → whole word + 2-grams (robust to josa/OCR noise),
 // latin/number words as-is. The whole-word token is rare → high IDF, so an exact
 // concept match (e.g. "무기력") outranks spurious 2-gram overlaps ("무기"=weapon).
-function tokenize(s: string): string[] {
+export function tokenize(s: string): string[] {
   const out: string[] = [];
   const words = s.toLowerCase().match(/[가-힣]+|[a-z0-9]{2,}/g) || [];
   for (const w of words) {
@@ -165,7 +165,7 @@ function loadEmbeddings(): EmbStore | null {
 }
 
 // Embed the query (normalized Float32) via OpenAI; null on any failure.
-async function embedQuery(query: string, dim: number): Promise<Float32Array | null> {
+export async function embedQuery(query: string, dim: number): Promise<Float32Array | null> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) return null;
   try {

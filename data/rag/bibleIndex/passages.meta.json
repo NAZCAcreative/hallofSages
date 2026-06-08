@@ -1,0 +1,6 @@
+{
+  "model": "text-embedding-3-small",
+  "dim": 512,
+  "count": 31976,
+  "builtAt": "2026-06-08T03:50:23.039Z"
+}
