@@ -139,7 +139,9 @@ export async function POST(req: Request) {
     .join("\n\n");
 
   try {
-    const client = new OpenAI({ apiKey });
+    // 동시질문은 3개 호출이 한꺼번에 나가 순간적으로 rate limit에 닿을 수 있으니
+    // 재시도를 넉넉히 둔다 (그래야 고정 폴백 문구로 떨어지지 않고 인격별 답이 유지됨).
+    const client = new OpenAI({ apiKey, maxRetries: 5 });
     const params: OpenAI.Chat.ChatCompletionCreateParamsNonStreaming = {
       model: MODEL,
       messages: [

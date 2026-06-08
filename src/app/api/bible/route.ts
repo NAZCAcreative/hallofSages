@@ -102,7 +102,7 @@ export async function POST(req: Request) {
   ].join("\n");
 
   try {
-    const client = new OpenAI({ apiKey });
+    const client = new OpenAI({ apiKey, maxRetries: 5 });
     const params: OpenAI.Chat.ChatCompletionCreateParamsNonStreaming = {
       model: MODEL,
       messages: [

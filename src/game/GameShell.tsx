@@ -59,6 +59,15 @@ export default function GameShell() {
   const [answers, setAnswers] = useState<Partial<Record<NpcId, Answer>>>({});
   const historyRef = useRef<Record<NpcId, Turn[]>>(emptyHistory());
 
+  // Cooldown: after asking, block the next question for 10s (avoids spamming the
+  // API, which would burst rate limits and degrade answers to fixed fallbacks).
+  const [cooldown, setCooldown] = useState(0); // seconds left
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const id = setTimeout(() => setCooldown((c) => Math.max(0, c - 1)), 1000);
+    return () => clearTimeout(id);
+  }, [cooldown]);
+
   // RAG sources drawer (right sliding panel)
   const [drawer, setDrawer] = useState<{ name: string; sources: Source[] } | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -179,13 +188,14 @@ export default function GameShell() {
   async function send(mode: "normal" | "advanced" = "normal") {
     const npc = chatNpc;
     const text = input.trim();
-    if (!npc || !text || loading || advLoading) return;
+    if (!npc || !text || loading || advLoading || cooldown > 0) return;
     const advanced = mode === "advanced" && npc.id === "jesus";
 
     const history = messages;
     const next = [...messages, { role: "user", content: text } as Turn];
     setMessages(next);
     setInput("");
+    setCooldown(10); // start the 10s cooldown
     if (advanced) setAdvLoading(true);
     else setLoading(true);
     addLog({ role: "user", name: "나", content: text });
@@ -235,9 +245,10 @@ export default function GameShell() {
 
   async function submitAll() {
     const text = sharedInput.trim();
-    if (!text || sending) return;
+    if (!text || sending || cooldown > 0) return;
     setSending(true);
     setSharedInput("");
+    setCooldown(10); // start the 10s cooldown
     addLog({ role: "user", name: "나", content: text });
     setAnswers(() => {
       const next: Partial<Record<NpcId, Answer>> = {};
@@ -246,7 +257,10 @@ export default function GameShell() {
     });
 
     await Promise.all(
-      NPCS.map(async (n) => {
+      NPCS.map(async (n, i) => {
+        // Stagger the three calls a little so they don't burst the API at once
+        // (a simultaneous burst can hit rate limits → identical fallback text).
+        await new Promise((r) => setTimeout(r, i * 350));
         const history = historyRef.current[n.id] ?? [];
         try {
           const res = await fetch("/api/chat", {
@@ -411,10 +425,10 @@ export default function GameShell() {
                 />
                 <button
                   onClick={submitAll}
-                  disabled={!sharedInput.trim() || sending}
+                  disabled={!sharedInput.trim() || sending || cooldown > 0}
                   className="rounded-xl border-2 border-black bg-amber-400 px-4 py-1.5 text-sm font-bold text-black hover:bg-amber-300 disabled:opacity-40"
                 >
-                  질문
+                  {sending ? "묻는 중…" : cooldown > 0 ? `${cooldown}초 후` : "질문"}
                 </button>
               </div>
             </div>
@@ -530,28 +544,36 @@ export default function GameShell() {
                 <div className="flex items-stretch gap-2">
                   <button
                     onClick={() => send("normal")}
-                    disabled={!input.trim() || loading || advLoading}
+                    disabled={!input.trim() || loading || advLoading || cooldown > 0}
                     className="flex-1 rounded-xl border-2 border-black bg-amber-400 px-3 py-1.5 text-sm font-bold hover:bg-amber-300 disabled:opacity-40"
                     title="현자와 대화하듯 위로·권면하는 일반답변"
                   >
-                    {loading ? "답하는 중…" : "🗨️ 일반답변"}
+                    {loading
+                      ? "답하는 중…"
+                      : cooldown > 0 && !advLoading
+                        ? `${cooldown}초 후`
+                        : "🗨️ 일반답변"}
                   </button>
                   <button
                     onClick={() => send("advanced")}
-                    disabled={!input.trim() || loading || advLoading}
+                    disabled={!input.trim() || loading || advLoading || cooldown > 0}
                     className="flex-1 rounded-xl border-2 border-black bg-indigo-300 px-3 py-1.5 text-sm font-bold text-indigo-950 hover:bg-indigo-200 disabled:opacity-40"
                     title="성경 색인을 깊이 참고해 핵심 구절을 정확히 인용·풀이 (참조 구절 포함)"
                   >
-                    {advLoading ? "성경 살피는 중…" : "📖 고급답변 ✦"}
+                    {advLoading
+                      ? "성경 살피는 중…"
+                      : cooldown > 0 && !loading
+                        ? `${cooldown}초 후`
+                        : "📖 고급답변 ✦"}
                   </button>
                 </div>
               ) : (
                 <button
                   onClick={() => send("normal")}
-                  disabled={!input.trim() || loading}
+                  disabled={!input.trim() || loading || cooldown > 0}
                   className="self-end rounded-xl border-2 border-black bg-amber-400 px-4 py-1.5 text-sm font-bold hover:bg-amber-300 disabled:opacity-40"
                 >
-                  질문
+                  {loading ? "답하는 중…" : cooldown > 0 ? `${cooldown}초 후` : "질문"}
                 </button>
               )}
             </div>
